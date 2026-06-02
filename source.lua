@@ -14,9 +14,16 @@ function ObsidianLib:CreateTheme(hubName)
             print("Section created: " .. sectionName)
             local Section = {}
             
+            -- 1. Fungsi Toggle yang udah Lu punya
             function Section:newToggle(toggleName, default, callback)
                 print("Toggle created: " .. toggleName)
-                -- Logika toggle Lu di sini
+                -- Logika toggle asli (bikin UI pas digeser/diklik) nanti masuk sini
+            end
+            
+            -- 2. TAMBAHIN INI: Fungsi Slider biar yanzhub kagak crash
+            function Section:newSlider(sliderName, max, min, callback)
+                print("Slider created: " .. sliderName .. " (Max: " .. max .. ", Min: " .. min .. ")")
+                -- Logika slider asli (bikin UI bar slider) nanti masuk sini
             end
             
             return Section
@@ -28,5 +35,5 @@ function ObsidianLib:CreateTheme(hubName)
     return Window
 end
 
--- INI YANG PALING PENTING! Jangan sampe lupa biar bisa di-source langsung
+-- Supaya bisa di-source langsung lewat loadstring
 return ObsidianLib
