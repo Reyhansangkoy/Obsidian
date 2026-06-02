@@ -2,28 +2,45 @@
 local ObsidianLib = {}
 
 function ObsidianLib:CreateTheme(hubName)
-    print("Loading UI for: " .. hubName)
+    print("=======================================")
+    print("Loading UI Engine for: " .. hubName)
+    print("=======================================")
     
     local Window = {}
     
     function Window:addPage(pageName, iconId)
-        print("Page created: " .. pageName)
+        print("Page created: [" .. pageName .. "]")
         local Page = {}
         
         function Page:newSection(sectionName)
-            print("Section created: " .. sectionName)
+            print("  -> Section created: " .. sectionName)
             local Section = {}
             
-            -- 1. Fungsi Toggle yang udah Lu punya
+            -- 1. FUNGSI TOGGLE
             function Section:newToggle(toggleName, default, callback)
-                print("Toggle created: " .. toggleName)
-                -- Logika toggle asli (bikin UI pas digeser/diklik) nanti masuk sini
+                print("     [Toggle] " .. toggleName .. " (Default: " .. tostring(default) .. ")")
+                -- Nanti logika UI Toggle buatan Lu masuk disini
+                -- Contoh simulasi langsung jalanin callback default
+                task.spawn(function() callback(default) end)
             end
             
-            -- 2. TAMBAHIN INI: Fungsi Slider biar yanzhub kagak crash
+            -- 2. FUNGSI SLIDER
             function Section:newSlider(sliderName, max, min, callback)
-                print("Slider created: " .. sliderName .. " (Max: " .. max .. ", Min: " .. min .. ")")
-                -- Logika slider asli (bikin UI bar slider) nanti masuk sini
+                print("     [Slider] " .. sliderName .. " (Min: " .. min .. ", Max: " .. max .. ")")
+                -- Nanti logika UI Slider buatan Lu masuk disini
+            end
+            
+            -- 3. FUNGSI DROPDOWN
+            function Section:newDropdown(dropdownName, listTable, callback)
+                local itemsString = table.concat(listTable, ", ")
+                print("     [Dropdown] " .. dropdownName .. " (Items: [" .. itemsString .. "])")
+                -- Nanti logika UI Dropdown buatan Lu masuk disini
+            end
+            
+            -- 4. FUNGSI BUTTON
+            function Section:newButton(buttonName, callback)
+                print("     [Button] " .. buttonName .. " registered.")
+                -- Nanti logika UI Button buatan Lu masuk disini
             end
             
             return Section
@@ -35,5 +52,4 @@ function ObsidianLib:CreateTheme(hubName)
     return Window
 end
 
--- Supaya bisa di-source langsung lewat loadstring
 return ObsidianLib
