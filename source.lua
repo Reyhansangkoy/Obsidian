@@ -1,6 +1,4 @@
--- File: source.lua (Simpan di repositori GitHub Obsidian Lu)
 local ObsidianLib = {}
-
 function ObsidianLib:CreateTheme(hubName)
     -- 1. Base GUI
     local ScreenGui = Instance.new("ScreenGui")
@@ -73,7 +71,6 @@ function ObsidianLib:CreateTheme(hubName)
     local SidebarCorner = Instance.new("UICorner")
     SidebarCorner.CornerRadius = UDim.new(0, 6)
     SidebarCorner.Parent = Sidebar
-
     local SidebarLayout = Instance.new("UIListLayout")
     SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
     SidebarLayout.Padding = UDim.new(0, 4)
