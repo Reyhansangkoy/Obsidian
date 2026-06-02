@@ -216,4 +216,5 @@ function ObsidianLib:CreateTheme(hubName)
     end
     return Window
 end
+getgenv().ObsidianLib = ObsidianLib
 return ObsidianLib
