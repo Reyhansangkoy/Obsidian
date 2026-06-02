@@ -177,4 +177,43 @@ function ObsidianLib:CreateTheme(hubName)
                 Label.TextSize = 13
                 Label.Font = Enum.Font.SourceSans
                 Label.TextXAlignment = Enum.TextXAlignment.Left
-                Label.Parent
+                Label.Parent = SliderFrame
+                local SetBtn = Instance.new("TextButton")
+                SetBtn.Size = UDim2.new(0, 80, 0, 24)
+                SetBtn.Position = UDim2.new(1, -92, 0, 10)
+                SetBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+                SetBtn.Text = "Set Max"
+                SetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                SetBtn.TextSize = 12
+                SetBtn.Font = Enum.Font.SourceSansBold
+                SetBtn.Parent = SliderFrame
+                local SetCorner = Instance.new("UICorner")
+                SetCorner.CornerRadius = UDim.new(0, 4)
+                SetCorner.Parent = SetBtn
+                SetBtn.MouseButton1Click:Connect(function()
+                    task.spawn(function() callback(max) end)
+                end)
+            end
+            function Section:newButton(buttonName, callback)
+                local Button = Instance.new("TextButton")
+                Button.Size = UDim2.new(1, 0, 0, 34)
+                Button.BackgroundColor3 = Color3.fromRGB(90, 40, 160)
+                Button.Text = buttonName
+                Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Button.TextSize = 13
+                Button.Font = Enum.Font.SourceSansBold
+                Button.Parent = PageScroll
+                local BtnCorner = Instance.new("UICorner")
+                BtnCorner.CornerRadius = UDim.new(0, 5)
+                BtnCorner.Parent = Button
+                Button.MouseButton1Click:Connect(function()
+                    task.spawn(callback)
+                end)
+            end
+            return Section
+        end
+        return Page
+    end
+    return Window
+end
+return ObsidianLib
