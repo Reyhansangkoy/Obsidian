@@ -24,7 +24,7 @@ function ObsidianLib:CreateTheme(hubName)
     MainCorner.CornerRadius = UDim.new(0, 9)
     MainCorner.Parent = MainFrame
 
-    -- Stroke / Garis Pinggir UI (Obsidian Purple Accent)
+    -- Stroke / Garis Pinggir UI
     local MainStroke = Instance.new("UIStroke")
     MainStroke.Color = Color3.fromRGB(90, 40, 160)
     MainStroke.Thickness = 1.5
@@ -70,8 +70,9 @@ function ObsidianLib:CreateTheme(hubName)
     Sidebar.ScrollBarThickness = 0
     Sidebar.Parent = MainFrame
 
-    Instance.new("UICorner").CornerRadius = UDim.new(0, 6)
-    Sidebar.UICorner.Parent = Sidebar
+    local SidebarCorner = Instance.new("UICorner")
+    SidebarCorner.CornerRadius = UDim.new(0, 6)
+    SidebarCorner.Parent = Sidebar
 
     local SidebarLayout = Instance.new("UIListLayout")
     SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -87,11 +88,13 @@ function ObsidianLib:CreateTheme(hubName)
     ContentFrame.BorderSizePixel = 0
     ContentFrame.Parent = MainFrame
 
-    Instance.new("UICorner").CornerRadius = UDim.new(0, 6)
-    ContentFrame.UICorner.Parent = ContentFrame
+    local ContentCorner = Instance.new("UICorner")
+    ContentCorner.CornerRadius = UDim.new(0, 6)
+    ContentCorner.Parent = ContentFrame
 
     local Window = {}
     local isFirstPage = true
+    local allTabButtons = {}
 
     function Window:addPage(pageName, iconId)
         -- Bikin halaman scroll frame penampung konten fitur
@@ -102,7 +105,7 @@ function ObsidianLib:CreateTheme(hubName)
         PageScroll.BackgroundTransparency = 1
         PageScroll.ScrollBarThickness = 4
         PageScroll.ScrollBarImageColor3 = Color3.fromRGB(90, 40, 160)
-        PageScroll.Visible = isFirstPage -- Halaman pertama otomatis kebuka
+        PageScroll.Visible = isFirstPage
         PageScroll.Parent = ContentFrame
 
         local PageLayout = Instance.new("UIListLayout")
@@ -125,15 +128,18 @@ function ObsidianLib:CreateTheme(hubName)
         TabBtn.TextSize = 13
         TabBtn.Parent = Sidebar
 
-        Instance.new("UICorner").CornerRadius = UDim.new(0, 5)
-        TabBtn.UICorner.Parent = TabBtn
+        local TabCorner = Instance.new("UICorner")
+        TabCorner.CornerRadius = UDim.new(0, 5)
+        TabCorner.Parent = TabBtn
+
+        table.insert(allTabButtons, TabBtn)
 
         TabBtn.MouseButton1Click:Connect(function()
             for _, p in pairs(ContentFrame:GetChildren()) do
                 if p:IsA("ScrollingFrame") then p.Visible = false end
             end
-            for _, b in pairs(Sidebar:GetChildren()) do
-                if b:IsA("TextButton") then b.BackgroundColor3 = Color3.fromRGB(255, 255, 255) and Color3.fromRGB(25, 25, 28) end
+            for _, b in pairs(allTabButtons) do
+                b.BackgroundColor3 = Color3.fromRGB(25, 25, 28)
             end
             PageScroll.Visible = true
             TabBtn.BackgroundColor3 = Color3.fromRGB(90, 40, 160)
@@ -143,7 +149,6 @@ function ObsidianLib:CreateTheme(hubName)
         local Page = {}
 
         function Page:newSection(sectionName)
-            -- Label Judul Section Pemisah Fitur
             local SectionLabel = Instance.new("TextLabel")
             SectionLabel.Size = UDim2.new(1, 0, 0, 20)
             SectionLabel.BackgroundTransparency = 1
@@ -156,7 +161,7 @@ function ObsidianLib:CreateTheme(hubName)
 
             local Section = {}
 
-            -- 1. MODEL COMPONENT: TOGGLE
+            -- 1. TOGGLE
             function Section:newToggle(toggleName, default, callback)
                 local state = default
 
@@ -165,8 +170,10 @@ function ObsidianLib:CreateTheme(hubName)
                 ToggleFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 28)
                 ToggleFrame.Text = ""
                 ToggleFrame.Parent = PageScroll
-                Instance.new("UICorner").CornerRadius = UDim.new(0, 5)
-                ToggleFrame.UICorner.Parent = ToggleFrame
+                
+                local TFrameCorner = Instance.new("UICorner")
+                TFrameCorner.CornerRadius = UDim.new(0, 5)
+                TFrameCorner.Parent = ToggleFrame
 
                 local Label = Instance.new("TextLabel")
                 Label.Size = UDim2.new(1, -60, 1, 0)
@@ -184,8 +191,10 @@ function ObsidianLib:CreateTheme(hubName)
                 Indicator.Position = UDim2.new(1, -47, 0.5, -9)
                 Indicator.BackgroundColor3 = state and Color3.fromRGB(90, 40, 160) or Color3.fromRGB(50, 50, 55)
                 Indicator.Parent = ToggleFrame
-                Instance.new("UICorner").CornerRadius = UDim.new(0, 9)
-                Indicator.UICorner.Parent = Indicator
+                
+                local IndCorner = Instance.new("UICorner")
+                IndCorner.CornerRadius = UDim.new(0, 9)
+                IndCorner.Parent = Indicator
 
                 ToggleFrame.MouseButton1Click:Connect(function()
                     state = not state
@@ -194,14 +203,16 @@ function ObsidianLib:CreateTheme(hubName)
                 end)
             end
 
-            -- 2. MODEL COMPONENT: SLIDER
+            -- 2. SLIDER
             function Section:newSlider(sliderName, max, min, callback)
                 local SliderFrame = Instance.new("Frame")
                 SliderFrame.Size = UDim2.new(1, 0, 0, 45)
                 SliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 28)
                 SliderFrame.Parent = PageScroll
-                Instance.new("UICorner").CornerRadius = UDim.new(0, 5)
-                SliderFrame.UICorner.Parent = SliderFrame
+                
+                local SFrameCorner = Instance.new("UICorner")
+                SFrameCorner.CornerRadius = UDim.new(0, 5)
+                SFrameCorner.Parent = SliderFrame
 
                 local Label = Instance.new("TextLabel")
                 Label.Size = UDim2.new(1, -110, 0, 22)
@@ -223,22 +234,26 @@ function ObsidianLib:CreateTheme(hubName)
                 SetBtn.TextSize = 12
                 SetBtn.Font = Enum.Font.SourceSansBold
                 SetBtn.Parent = SliderFrame
-                Instance.new("UICorner").CornerRadius = UDim.new(0, 4)
-                SetBtn.UICorner.Parent = SetBtn
+                
+                local SetCorner = Instance.new("UICorner")
+                SetCorner.CornerRadius = UDim.new(0, 4)
+                SetCorner.Parent = SetBtn
 
                 SetBtn.MouseButton1Click:Connect(function()
                     task.spawn(function() callback(max) end)
                 end)
             end
 
-            -- 3. MODEL COMPONENT: DROPDOWN
+            -- 3. DROPDOWN
             function Section:newDropdown(dropdownName, listTable, callback)
                 local DropdownFrame = Instance.new("Frame")
                 DropdownFrame.Size = UDim2.new(1, 0, 0, 38)
                 DropdownFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 28)
                 DropdownFrame.Parent = PageScroll
-                Instance.new("UICorner").CornerRadius = UDim.new(0, 5)
-                DropdownFrame.UICorner.Parent = DropdownFrame
+                
+                local DFrameCorner = Instance.new("UICorner")
+                DFrameCorner.CornerRadius = UDim.new(0, 5)
+                DFrameCorner.Parent = DropdownFrame
 
                 local Label = Instance.new("TextLabel")
                 Label.Size = UDim2.new(0, 150, 1, 0)
@@ -259,15 +274,17 @@ function ObsidianLib:CreateTheme(hubName)
                 SelectBtn.Font = Enum.Font.SourceSansBold
                 SelectBtn.TextSize = 12
                 SelectBtn.Parent = DropdownFrame
-                Instance.new("UICorner").CornerRadius = UDim.new(0, 4)
-                SelectBtn.UICorner.Parent = SelectBtn
+                
+                local SelCorner = Instance.new("UICorner")
+                SelCorner.CornerRadius = UDim.new(0, 4)
+                SelCorner.Parent = SelectBtn
 
                 SelectBtn.MouseButton1Click:Connect(function()
                     task.spawn(function() callback(SelectBtn.Text) end)
                 end)
             end
 
-            -- 4. MODEL COMPONENT: BUTTON
+            -- 4. BUTTON
             function Section:newButton(buttonName, callback)
                 local Button = Instance.new("TextButton")
                 Button.Size = UDim2.new(1, 0, 0, 34)
@@ -277,8 +294,10 @@ function ObsidianLib:CreateTheme(hubName)
                 Button.TextSize = 13
                 Button.Font = Enum.Font.SourceSansBold
                 Button.Parent = PageScroll
-                Instance.new("UICorner").CornerRadius = UDim.new(0, 5)
-                Button.UICorner.Parent = Button
+                
+                local BtnCorner = Instance.new("UICorner")
+                BtnCorner.CornerRadius = UDim.new(0, 5)
+                BtnCorner.Parent = Button
 
                 Button.MouseButton1Click:Connect(function()
                     task.spawn(callback)
