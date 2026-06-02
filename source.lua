@@ -19,28 +19,23 @@ function ObsidianLib:CreateTheme(hubName)
             -- 1. FUNGSI TOGGLE
             function Section:newToggle(toggleName, default, callback)
                 print("     [Toggle] " .. toggleName .. " (Default: " .. tostring(default) .. ")")
-                -- Nanti logika UI Toggle buatan Lu masuk disini
-                -- Contoh simulasi langsung jalanin callback default
                 task.spawn(function() callback(default) end)
             end
             
             -- 2. FUNGSI SLIDER
             function Section:newSlider(sliderName, max, min, callback)
                 print("     [Slider] " .. sliderName .. " (Min: " .. min .. ", Max: " .. max .. ")")
-                -- Nanti logika UI Slider buatan Lu masuk disini
             end
             
             -- 3. FUNGSI DROPDOWN
             function Section:newDropdown(dropdownName, listTable, callback)
                 local itemsString = table.concat(listTable, ", ")
                 print("     [Dropdown] " .. dropdownName .. " (Items: [" .. itemsString .. "])")
-                -- Nanti logika UI Dropdown buatan Lu masuk disini
             end
             
             -- 4. FUNGSI BUTTON
             function Section:newButton(buttonName, callback)
                 print("     [Button] " .. buttonName .. " registered.")
-                -- Nanti logika UI Button buatan Lu masuk disini
             end
             
             return Section
