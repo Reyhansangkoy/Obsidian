@@ -74,4 +74,4 @@ function ObsidianLib:CreateTheme(hubName)
     return Window
 end
 
-_G.ObsidianLib = ObsidianLib
+return ObsidianLib
