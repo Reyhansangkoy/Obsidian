@@ -1,141 +1,123 @@
 local ObsidianLib = {}
-
 function ObsidianLib:CreateTheme(hubName)
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "PanduStyle_UI"
-    ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    ScreenGui.Name = "ObsidianEngineUI"
+    ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-    -- Main Window
+    ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
     local MainFrame = Instance.new("Frame")
-    MainFrame.Name = "MainFrame"
-    MainFrame.Size = UDim2.new(0, 600, 0, 420)
-    MainFrame.Position = UDim2.new(0.5, -300, 0.5, -210)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-    MainFrame.BorderSizePixel = 0
+    MainFrame.Size = UDim2.new(0, 620, 0, 440)
+    MainFrame.Position = UDim2.new(0.5, -310, 0.5, -220)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
     MainFrame.Active = true
     MainFrame.Draggable = true
     MainFrame.Parent = ScreenGui
-
     local MainCorner = Instance.new("UICorner")
     MainCorner.CornerRadius = UDim.new(0, 10)
     MainCorner.Parent = MainFrame
-
-    -- Sidebar (Tempat Icon)
-    local Sidebar = Instance.new("Frame")
-    Sidebar.Name = "Sidebar"
-    Sidebar.Size = UDim2.new(0, 50, 1, 0)
-    Sidebar.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+    local Sidebar = Instance.new("ScrollingFrame")
+    Sidebar.Size = UDim2.new(0, 60, 1, -20)
+    Sidebar.Position = UDim2.new(0, 10, 0, 10)
+    Sidebar.BackgroundColor3 = Color3.fromRGB(12, 12, 14)
     Sidebar.BorderSizePixel = 0
+    Sidebar.ScrollBarThickness = 0
     Sidebar.Parent = MainFrame
-
-    local SidebarCorner = Instance.new("UICorner")
-    SidebarCorner.CornerRadius = UDim.new(0, 10)
-    SidebarCorner.Parent = Sidebar
-
     local SidebarLayout = Instance.new("UIListLayout")
     SidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    SidebarLayout.Padding = UDim.new(0, 15)
+    SidebarLayout.Padding = UDim.new(0, 12)
     SidebarLayout.Parent = Sidebar
-
-    -- TopBar & Search
-    local TopBar = Instance.new("Frame")
-    TopBar.Name = "TopBar"
-    TopBar.Size = UDim2.new(1, -60, 0, 40)
-    TopBar.Position = UDim2.new(0, 60, 0, 10)
-    TopBar.BackgroundTransparency = 1
-    TopBar.Parent = MainFrame
-
-    local SearchBox = Instance.new("TextBox")
-    SearchBox.Name = "SearchBar"
-    SearchBox.Size = UDim2.new(1, -20, 0, 25)
-    SearchBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-    SearchBox.Text = "Search..."
-    SearchBox.TextColor3 = Color3.fromRGB(150, 150, 150)
-    SearchBox.TextSize = 14
-    SearchBox.Font = Enum.Font.SourceSans
-    SearchBox.Parent = TopBar
-
-    local SearchCorner = Instance.new("UICorner")
-    SearchCorner.CornerRadius = UDim.new(0, 6)
-    SearchCorner.Parent = SearchBox
-
-    -- Container for Pages
     local ContentContainer = Instance.new("Frame")
-    ContentContainer.Name = "Content"
-    ContentContainer.Size = UDim2.new(1, -70, 1, -60)
-    ContentContainer.Position = UDim2.new(0, 60, 0, 50)
+    ContentContainer.Size = UDim2.new(1, -90, 1, -20)
+    ContentContainer.Position = UDim2.new(0, 80, 0, 10)
     ContentContainer.BackgroundTransparency = 1
     ContentContainer.Parent = MainFrame
-
     local Window = {}
-    local isFirst = true
-
-    function Window:addPage(name, iconId)
-        local PageFrame = Instance.new("ScrollingFrame")
-        PageFrame.Name = name .. "Page"
-        PageFrame.Size = UDim2.new(1, 0, 1, 0)
-        PageFrame.BackgroundTransparency = 1
-        PageFrame.ScrollBarThickness = 2
-        PageFrame.Visible = isFirst
-        PageFrame.Parent = ContentContainer
-
-        local UIGrid = Instance.new("UIGridLayout")
-        UIGrid.CellSize = UDim2.new(0.48, 0, 0, 200) -- Biar jadi 2 Kolom kayak Pandu Hub
-        UIGrid.CellPadding = UDim2.new(0.02, 0, 0.02, 0)
-        UIGrid.Parent = PageFrame
-
-        -- Tab Button di Sidebar
-        local TabBtn = Instance.new("ImageButton")
-        TabBtn.Size = UDim2.new(0, 30, 0, 30)
-        TabBtn.BackgroundTransparency = 1
-        TabBtn.Image = iconId or "rbxassetid://6031225818" -- Default icon
-        TabBtn.ImageColor3 = isFirst and Color3.fromRGB(150, 100, 255) or Color3.fromRGB(200, 200, 200)
-        TabBtn.Parent = Sidebar
-
-        TabBtn.MouseButton1Click:Connect(function()
-            for _, p in pairs(ContentContainer:GetChildren()) do
-                if p:IsA("ScrollingFrame") then p.Visible = false end
-            end
-            PageFrame.Visible = true
+    local isFirstPage = true
+    local allTabButtons = {}
+    function Window:addPage(pageName, iconId)
+        local PageScroll = Instance.new("ScrollingFrame")
+        PageScroll.Size = UDim2.new(1, 0, 1, 0)
+        PageScroll.BackgroundTransparency = 1
+        PageScroll.ScrollBarThickness = 2
+        PageScroll.Visible = isFirstPage
+        PageScroll.Parent = ContentContainer
+        local PageLayout = Instance.new("UIListLayout")
+        PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        PageLayout.Padding = UDim.new(0, 10)
+        PageLayout.Parent = PageScroll
+        PageLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            PageScroll.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 10)
         end)
-
-        isFirst = false
+        local TabBtn = Instance.new("ImageButton")
+        TabBtn.Size = UDim2.new(0, 36, 0, 36)
+        TabBtn.BackgroundColor3 = isFirstPage and Color3.fromRGB(90, 40, 160) or Color3.fromRGB(22, 22, 26)
+        TabBtn.Image = iconId or "rbxassetid://6031225818"
+        TabBtn.Parent = Sidebar
+        local TabCorner = Instance.new("UICorner")
+        TabCorner.CornerRadius = UDim.new(0, 6)
+        TabCorner.Parent = TabBtn
+        table.insert(allTabButtons, {Button = TabBtn, Page = PageScroll})
+        TabBtn.MouseButton1Click:Connect(function()
+            for _, t in pairs(allTabButtons) do
+                t.Page.Visible = false
+                t.Button.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
+            end
+            PageScroll.Visible = true
+            TabBtn.BackgroundColor3 = Color3.fromRGB(90, 40, 160)
+        end)
+        isFirstPage = false
         local Page = {}
-
-        function Page:newSection(title)
+        function Page:newSection(sectionName)
             local SectionFrame = Instance.new("Frame")
-            SectionFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-            SectionFrame.Parent = PageFrame
-            
-            local SCorner = Instance.new("UICorner")
-            SCorner.CornerRadius = UDim.new(0, 8)
-            SCorner.Parent = SectionFrame
-
-            local STitle = Instance.new("TextLabel")
-            STitle.Size = UDim2.new(1, 0, 0, 25)
-            STitle.Text = "  " .. title
-            STitle.TextColor3 = Color3.fromRGB(150, 100, 255)
-            STitle.TextXAlignment = Enum.TextXAlignment.Left
-            STitle.BackgroundTransparency = 1
-            STitle.Font = Enum.Font.SourceSansBold
-            STitle.Parent = SectionFrame
-
-            local SLayout = Instance.new("UIListLayout")
-            SLayout.Padding = UDim.new(0, 5)
-            SLayout.Parent = SectionFrame
-
-            -- Disini lu bisa tambahin fungsi Toggle/Slider (sama kayak script sebelumnya)
+            SectionFrame.Size = UDim2.new(1, -10, 0, 30)
+            SectionFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
+            SectionFrame.Parent = PageScroll
+            local SectionLayout = Instance.new("UIListLayout")
+            SectionLayout.Padding = UDim.new(0, 6)
+            SectionLayout.Parent = SectionFrame
+            SectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                SectionFrame.Size = UDim2.new(1, -10, 0, SectionLayout.AbsoluteContentSize.Y + 10)
+            end)
+            local SectionTitle = Instance.new("TextLabel")
+            SectionTitle.Size = UDim2.new(1, 0, 0, 24)
+            SectionTitle.BackgroundTransparency = 1
+            SectionTitle.Text = "  " .. sectionName:upper()
+            SectionTitle.TextColor3 = Color3.fromRGB(150, 120, 220)
+            SectionTitle.Font = Enum.Font.SourceSansBold
+            SectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+            SectionTitle.Parent = SectionFrame
             local Section = {}
             function Section:newToggle(name, default, callback)
                 local Tgl = Instance.new("TextButton")
-                Tgl.Size = UDim2.new(1, -10, 0, 30)
+                Tgl.Size = UDim2.new(1, -16, 0, 30)
+                Tgl.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
                 Tgl.Text = "  " .. name
-                Tgl.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
-                Tgl.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Tgl.TextColor3 = Color3.fromRGB(230, 230, 230)
                 Tgl.TextXAlignment = Enum.TextXAlignment.Left
                 Tgl.Parent = SectionFrame
-                -- Logic toggle disini...
+                Tgl.MouseButton1Click:Connect(function() task.spawn(callback) end)
+            end
+            function Section:newSlider(name, max, min, callback)
+                local Sld = Instance.new("Frame")
+                Sld.Size = UDim2.new(1, -16, 0, 40)
+                Sld.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
+                Sld.Parent = SectionFrame
+                local Lbl = Instance.new("TextLabel")
+                Lbl.Size = UDim2.new(1, 0, 0, 20)
+                Lbl.Text = "  " .. name
+                Lbl.TextColor3 = Color3.fromRGB(230, 230, 230)
+                Lbl.BackgroundTransparency = 1
+                Lbl.TextXAlignment = Enum.TextXAlignment.Left
+                Lbl.Parent = Sld
+            end
+            function Section:newButton(name, callback)
+                local Btn = Instance.new("TextButton")
+                Btn.Size = UDim2.new(1, -16, 0, 30)
+                Btn.BackgroundColor3 = Color3.fromRGB(90, 40, 160)
+                Btn.Text = name
+                Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Btn.Parent = SectionFrame
+                Btn.MouseButton1Click:Connect(function() task.spawn(callback) end)
             end
             return Section
         end
@@ -143,6 +125,5 @@ function ObsidianLib:CreateTheme(hubName)
     end
     return Window
 end
-
 getgenv().ObsidianLib = ObsidianLib
 return ObsidianLib
