@@ -35,11 +35,12 @@ function ObsidianLib:CreateTheme(hubName)
         local Page = {}
         function Page:newSection(sectionName)
             local SectionFrame = Instance.new("Frame")
-            SectionFrame.Size = UDim2.new(1, -10, 0, 100)
+            SectionFrame.Size = UDim2.new(1, -10, 0, 150)
             SectionFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
             SectionFrame.Parent = PageScroll
             
             local SectionLayout = Instance.new("UIListLayout")
+            SectionLayout.Padding = UDim.new(0, 5)
             SectionLayout.Parent = SectionFrame
 
             local Section = {}
@@ -51,7 +52,6 @@ function ObsidianLib:CreateTheme(hubName)
                 Tgl.MouseButton1Click:Connect(function() callback(not default) end)
             end
 
-            -- INI FUNGSI YANG HILANG TADI --
             function Section:newSlider(sliderName, max, min, callback)
                 local Sld = Instance.new("TextButton")
                 Sld.Size = UDim2.new(1, 0, 0, 40)
@@ -74,4 +74,4 @@ function ObsidianLib:CreateTheme(hubName)
     return Window
 end
 
-return ObsidianLib
+_G.ObsidianLib = ObsidianLib
